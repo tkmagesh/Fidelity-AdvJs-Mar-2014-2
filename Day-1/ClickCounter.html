@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Click Counter</title>
+	<script>
+	(function(){
+		var counter = 0;
+		function increment(){
+			counter++;
+			displayCounter();
+		}
+		function displayCounter(){
+			document.getElementById("divMessage").innerHTML = counter;
+		}
+		function init(){
+			document.getElementById("btnCount").addEventListener("click",increment);
+		}
+		window.addEventListener("DOMContentLoaded",init);
+		console.log("SEAF is executed..");
+	})();
+
+	</script>
+</head>
+<body>
+	<input type="button" value="Count" id="btnCount">
+	<div id="divMessage"></div>
+</body>
+</html>

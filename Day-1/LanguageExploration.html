@@ -146,7 +146,58 @@
 			//assert
 			return result === expectedResult;
 		});
+		test("Should be able to sum an array of numbers",function(){
+			//arrange
+			var  
+			 	numbers = [10,20,30,40];
+				expectedResult = 100;
+
+			//act
+			var result = sum(numbers);
+			
+			//assert
+			return result === expectedResult;
+		});
+		test("Should be able to sum a nested array of numbers",function(){
+			//arrange
+			var  
+			 	numbers = [10,[20,[30,[40]]]];
+				expectedResult = 100;
+
+			//act
+			var result = sum(numbers);
+			
+			//assert
+			return result === expectedResult;
+		});
+		test("Should be able to sum an array of functions returning functions returning numbers in string format",function(){
+			//arrange
+			var  
+			 	f1 = function(){ return function(){ return "10";};},
+			 	f2 = function(){ return function(){ return "20";};},
+				expectedResult = 30;
+
+			//act
+			var result = sum([f1,f2]);
+			
+			//assert
+			return result === expectedResult;
+		});
+		test("Should be able to sum an array of functions returning functions returning array of numbers",function(){
+			//arrange
+			var  
+			 	f1 = function(){ return function(){ return ["10","20"];};},
+			 	f2 = function(){ return function(){ return [30,40];};},
+				expectedResult = 100;
+
+			//act
+			var result = sum([f1,f2]);
+			
+			//assert
+			return result === expectedResult;
+		});
 	}
+
 	</script>
 </head>
 <body>
