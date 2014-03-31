@@ -3,8 +3,45 @@
 <head>
 	<meta charset="UTF-8">
 	<title>JavaScript - Language Exploration</title>
+	<style>
+	.pass {
+		color : green;
+	}
+	.fail{
+		color : red;
+		text-decoration: line-through;
+		font-weight: bold;
+	}
+	</style>
+	<script src="calculator.js"></script>
+	<script type="text/javascript">
+	function test(title,testFn){
+		var ele = document.createElement("li");
+		ele.innerHTML = title;
+		var result = testFn();
+		ele.classList.add(result ? "pass" : "fail");
+		document.getElementById("ulTestList").appendChild(ele);
+	}
+	window.addEventListener("DOMContentLoaded",init);
+	function init(){
+		test("Should be able to add two numbers",function(){
+			//arrange
+			var number1 = 10
+				, number2 = 20
+				, expectedResult = 30;
+
+			//act
+			var result = sum(number1,number2);
+
+			//assert
+			return result === expectedResult;
+		});
+	}
+	</script>
 </head>
 <body>
-	
+	<h1>Calculator</h1>
+	<hr>
+	<ul id="ulTestList"></ul>
 </body>
 </html>
