@@ -36,6 +36,116 @@
 			//assert
 			return result === expectedResult;
 		});
+		test("Should be able to add two numbers in string format",function(){
+			//arrange
+			var number1 = "10"
+				, number2 = "20"
+				, expectedResult = 30;
+
+			//act
+			var result = sum(number1,number2);
+
+			//assert
+			return result === expectedResult;
+		});
+		test("Should be able ignore arguments that are not convertible to numbers",function(){
+			//arrange
+			var number1 = "10"
+				, number2 = "a"
+				, expectedResult = 10;
+
+			//act
+			var result = sum(number1,number2);
+
+			//assert
+			return result === expectedResult;
+		});
+		test("Should be able sum more than 2 numbers",function(){
+			//arrange
+			var number1 = 10
+				, number2 = 20
+				, number3 = 30
+				, expectedResult = 60;
+
+			//act
+			var result = sum(number1,number2,number3);
+
+			//assert
+			return result === expectedResult;
+		});
+		test("Should be able sum only 1 number",function(){
+			//arrange
+			var number1 = 10
+				, expectedResult = 10;
+
+			//act
+			var result = sum(number1);
+			
+			//assert
+			return result === expectedResult;
+		});
+		test("Should return 0 when sum with no arguments",function(){
+			//arrange
+			var  expectedResult = 0;
+
+			//act
+			var result = sum();
+			
+			//assert
+			return result === expectedResult;
+		});
+		test("Should be able to sum functions returning numbers",function(){
+			//arrange
+			var  
+			 	f1 = function(){ return 10;},
+			 	f2 = function(){ return 20;},
+				expectedResult = 30;
+
+			//act
+			var result = sum(f1,f2);
+			
+			//assert
+			return result === expectedResult;
+		});
+		test("Should be able to sum functions returning numbers in string format",function(){
+			//arrange
+			var  
+			 	f1 = function(){ return "10";},
+			 	f2 = function(){ return "20";},
+				expectedResult = 30;
+
+			//act
+			var result = sum(f1,f2);
+			
+			//assert
+			return result === expectedResult;
+		});
+		test("Should be able to sum functions returning functions returning numbers",function(){
+			//arrange
+			var  
+			 	f1 = function(){ return function(){ return 10;};},
+			 	f2 = function(){ return function(){ return 20;};},
+				expectedResult = 30;
+
+			//act
+			var result = sum(f1,f2);
+			
+			//assert
+			return result === expectedResult;
+		});
+		test("Should be able to sum functions returning functions returning numbers in string format",function(){
+			//arrange
+			var  
+			 	f1 = function(){ return function(){ return "10";};},
+			 	f2 = function(){ return function(){ return "20";};},
+				expectedResult = 30;
+
+			//act
+			var result = sum(f1,f2);
+			
+			//assert
+			return result === expectedResult;
+		});
 	}
 	</script>
 </head>
