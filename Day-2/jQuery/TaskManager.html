@@ -15,6 +15,37 @@
 		font-style: italic;
 	}
 	</style>
+	<script src="bower_components/jquery/dist/jquery.js"></script>
+	<script>
+	// $("li")
+	// $("<li>")
+	$(function(){
+		$("#btnAddTask").click(onBtnAddTaskClick);
+		function onBtnAddTaskClick(){
+			$("<li>")
+				.html($("#txtTask").val())
+				.click(onTaskItemClick)
+				.appendTo("#ulTaskList");
+			displayMessage("A new Task is added");
+		}
+
+		$("#ulTaskList > li").click(onTaskItemClick);
+		function onTaskItemClick(){
+			$(this).toggleClass("completed");
+		}
+
+		$("#btnRemoveCompleted").click(function(){
+			$("#ulTaskList > li.completed").fadeOut(500,function(){ 
+				$(this).remove(); }
+			);
+			displayMessage("0 or more completed tasks are removed");
+		});
+
+		function displayMessage(msg){
+			$("#divMessage").html(msg).fadeIn(100).delay(3000).fadeOut(500);
+		}
+	})
+	</script>
 </head>
 <body>
 	<h1>Task Manager</h1>
