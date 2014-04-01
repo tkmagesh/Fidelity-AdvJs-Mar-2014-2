@@ -63,5 +63,52 @@ var compareProductsByValueInDesc = getInverseComparer(compareProductsByValue);
 
 sort(products,compareProductsByValueInDesc);
 
+function filter(list,criteriaFn){
+  var result = [];
+  for(var i=0;i<list.length;i++)
+    if (criteriaFn(list[i])) result.push(list[i]);
+  return result;
+}
 
-sort(products);
+function countBy(list,criteriaFn){
+  var result = 0;
+  for(var i=0;i<list.length;i++)
+   if (criteriaFn(list[i])) result++;
+  return result;
+}
+
+function min(list,attrName){
+	var result = list[0][attrName];
+	for(var i=1;i<list.length;i++)
+		if (list[i][attrName] < result) result = list[i][attrName];
+	return result;
+}
+
+function max(list,attrName){
+	var result = list[0][attrName];
+	for(var i=1;i<list.length;i++)
+		if (list[i][attrName] > result) result = list[i][attrName];
+	return result;
+}
+
+function max(list,attrName){
+	var result = list[0];
+	for(var i=1;i<list.length;i++)
+		if (list[i][attrName] > result[attrName]) result = list[i];
+	return result;
+}
+
+function every(list,predicate){
+  for(var i=0;i<list.length;i++)
+    if (!predicate(list[i])) return false;
+  return true;
+}
+
+every(products,function(p){return p.cost >= 10;})
+
+function some(list,predicate){
+   for(var i=0;i<list.length;i++)
+      if (predicate(list[i])) return true;
+   return false;
+}
+some(products,function(p){return p.cost > 50;})
