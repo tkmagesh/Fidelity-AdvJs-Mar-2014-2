@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Task Manager</title>
+	<script type="text/usecase">
+		1. User should be able to add a new Task
+		2. User should be able to mark/unmark a task as completed
+		3. User should be able to remove completed tasks
+	</script>
+	<style>
+	.completed{
+		color: red;
+		text-decoration: line-through;
+		font-style: italic;
+	}
+	</style>
+</head>
+<body>
+	<h1>Task Manager</h1>
+	<hr>
+	<div id="content">
+		<span>Task :</span>
+		<input type="text" name="" id="txtTask">
+		<input type="button" value="Add Task" id="btnAddTask">
+		<input type="button" value="Remove Completed" id="btnRemoveCompleted">
+		<ul id="ulTaskList">
+			<li>Task -1</li>
+			<li class="completed">Task -2</li>
+			<li>Task -3</li>
+		</ul>
+		<div id="divMessage"></div>
+	</div>
+</body>
+</html>
