@@ -1,0 +1,23 @@
+{
+  "name": "jQueryPrimerApp",
+  "version": "0.1.0",
+  "homepage": "https://github.com/tkmagesh/Fidelity-AdvJs-Mar-2014-2",
+  "authors": [
+    "tkmagesh <tkmagesh77@gmail.com>"
+  ],
+  "description": "demo app",
+  "main": "jQueryPrimer.html",
+  "license": "MIT",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "jquery": "~2.1.0",
+    "underscore": "~1.6.0"
+  }
+}
