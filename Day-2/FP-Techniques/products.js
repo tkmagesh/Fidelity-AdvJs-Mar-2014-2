@@ -18,6 +18,50 @@ function sort(list){
     }
 }
 
+0 -> left === right
+1 -> left > right
+-1 -> left < right
+
 //convert the above function in such a way that you can sort any list by any attribute
+function sort(list,comparerFn){
+  for(var i=0;i<list.length-1;i++)
+    for(var j=i+1;j<list.length;j++){
+       if (comparerFn(list[i],list[j]) > 0){
+          var temp = list[i];
+          list[i] = list[j];
+          list[j] = temp;
+       }
+    }
+}
+
+function compareProductsByValue(p1,p2){
+  var p1Value = p1.units * p1.cost,
+      p2Value = p2.units * p2.cost;
+  if (p1Value > p2Value) return 1;
+  if (p1Value === p2Value) return 0;
+  return -1;
+}
+
+/*function compareProductsByValueInDesc(p1,p2,comparerFn){
+	var p1Value = p1.units * p1.cost,
+	      p2Value = p2.units * p2.cost;
+	  if (p1Value > p2Value) return -1;
+	  if (p1Value === p2Value) return 0;
+	  return 1;
+}
+*/
+//generalization of the above function is
+
+function getInverseComparer(comparerFn){
+	var _comparerFn = comparerFn;
+	return function(p1,p2){
+		return _comparerFn(p1, p2) * -1;
+	}
+}
+
+var compareProductsByValueInDesc = getInverseComparer(compareProductsByValue);
+
+sort(products,compareProductsByValueInDesc);
+
 
 sort(products);
