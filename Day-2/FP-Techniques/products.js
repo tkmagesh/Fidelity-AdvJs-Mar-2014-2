@@ -112,3 +112,41 @@ function some(list,predicate){
    return false;
 }
 some(products,function(p){return p.cost > 50;})
+
+
+function groupBy(list,attrName){
+ var result = {};
+ for(var i=0;i<list.length;i++){
+    var key = list[i][attrName];
+    if (typeof result[key] === "undefined") result[key] = [];
+    result[key].push(list[i]);
+ }
+ return result;
+}
+
+var productsByCategory = groupBy(products,"category");
+
+var categories = [
+	{id : 1, name : "stationary" },
+	{id : 2, name : "grocery"}
+]
+
+function join(leftList, rightList, leftAttrName, rightAttrName, transformFn){
+  var result = [];
+  for(var i=0;i<leftList.length;i++){
+     var leftKey = leftList[i][leftAttrName];
+     for(var j=0;j<rightList.length;j++){
+        var rightKey = rightList[j][rightAttrName];
+        if (leftKey === rightKey){
+           result.push(transformFn(leftList[i],rightList[j]));
+        }
+     }
+  }
+  return result;
+}
+
+var result = join(products,categories,"category","id",function(p,c){
+     return { id : p.id, name : p.name, cost : p.cost, units : p.units, category : c.name};
+ });
+
+console.table(result);
