@@ -14,3 +14,30 @@ Modify the above constructor function as per below requirements:
 Clue:
 	convert the attributes to "accessor" functions
 */
+
+function Employee(id,name,salary){
+	var _id = 0,
+		_name = "",
+		_salary = 0;
+
+	this.id = function(){
+		return _id;
+	};
+
+	this.name = function(val){
+		if (typeof val === "undefined") return _name;
+		if (val !== "") _name = val;
+		return _name;
+	};
+
+	this.salary = function(val){
+		if (typeof val === "undefined") return _salary;
+		if (val > _salary) _salary = val;
+		return _salary;
+	}
+	_id = id;
+    _name = name;
+    _salary = salary;
+    
+
+}
