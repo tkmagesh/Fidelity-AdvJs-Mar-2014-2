@@ -15,39 +15,106 @@
 	<script src="jquery.js"></script>
 	<script>
 	function SalaryCalculator(){
-		this.basic = 0;
-		this.hra =0;
+		var _basic = 0,
+			_hra = 0,
+			_da = 0,
+			_tax = 0,
+			_salary = 0;
+
+		this.subscribers = {};
+
+		this.basic = function(val){
+			if (typeof val === "undefined") return _basic;
+			_basic = val;
+			this.triggerChange("basic");
+		};
+		this.hra = function(val){
+			if (typeof val === "undefined") return _hra;
+			_hra = val;
+			this.triggerChange("hra");
+		};
+		this.da = function(val){
+			if (typeof val === "undefined") return _da;
+			_da = val;
+			this.triggerChange("da");
+		};
+		this.tax = function(val){
+			if (typeof val === "undefined") return _tax;
+			_tax = val;
+			this.triggerChange("tax");
+		};
+
+		this.salary = function(val){
+			if (typeof val === "undefined") return _salary;
+			_salary = val;
+			this.triggerChange("salary");
+		};
+		
+		/*this.hra =0;
 		this.da = 0;
 		this.tax = 0;
-		this.onSalaryChange = function(){};
+		this.subscribers = {};
+
+		this.onSalaryChange = function(){};*/
 	}
+
+	SalaryCalculator.prototype.addChangeListener = function(attrName,callbackFn){
+		if (typeof this.subscribers[attrName] === "undefined") this.subscribers[attrName] = [];
+		this.subscribers[attrName].push(callbackFn);
+	}
+
+	SalaryCalculator.prototype.triggerChange = function(attrName){
+		var listeners = this.subscribers[attrName] || [];
+		for(var i=0; i<listeners.length;i++)
+			listeners[i]();
+	}
+
 	SalaryCalculator.prototype.calculate = function(){
-		var gross =  this.basic + this.hra + this.da;
-		this.salary = gross * ((100-this.tax)/100);
-		if (typeof this.onSalaryChange === "function") this.onSalaryChange();
+		var gross =  this.basic() + this.hra() + this.da();
+		this.salary(gross * ((100-this.tax())/100));
+		this.triggerChange("salary");
 	}
 
 
 	$(function(){
 		window.calc = new SalaryCalculator();
 
-		calc.onSalaryChange = function(){
+		/*calc.onSalaryChange = function(){
 			$("#divResult").html(calc.salary);
-		}
+		}*/
 
+		calc.addChangeListener("salary",function(){
+			$("#divResult").html(calc.salary());
+		});
+
+		calc.addChangeListener("basic",function(){
+			$("#txtBasic").val(calc.basic());
+		});
+
+		calc.addChangeListener("hra",function(){
+			$("#txtHra").val(calc.hra());
+		});
+		calc.addChangeListener("da",function(){
+			$("#txtDa").val(calc.da());
+		});
+		calc.addChangeListener("tax",function(){
+			$("#rangeTax").val(calc.tax());
+			$("#spanTax").text(calc.tax());
+		});
+
+//--------------------------------------------------------------------------------
 		$("#txtBasic").change(function(){
-			calc.basic = parseInt($("#txtBasic").val());
+			calc.basic(parseInt($("#txtBasic").val()));
 		});
 		$("#txtHra").change(function(){
-			calc.hra = parseInt($("#txtHra").val());
+			calc.hra(parseInt($("#txtHra").val()));
 		});
 		$("#txtDa").change(function(){
-			calc.da = parseInt($("#txtDa").val());
+			calc.da(parseInt($("#txtDa").val()));
 		
 		});
 		$("#rangeTax").change(function(){
-			calc.tax = parseInt($("#rangeTax").val());
-			$("#spanTax").text(this.value);
+			calc.tax(parseInt($("#rangeTax").val()));
 		});
 
 
