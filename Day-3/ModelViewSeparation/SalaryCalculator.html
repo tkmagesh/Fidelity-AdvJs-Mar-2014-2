@@ -13,123 +13,8 @@
 	}
 	</style>
 	<script src="jquery.js"></script>
-	<script>
-	function SalaryCalculator(){
-		var _basic = 0,
-			_hra = 0,
-			_da = 0,
-			_tax = 0,
-			_salary = 0;
-
-		this.subscribers = {};
-
-		this.basic = function(val){
-			if (typeof val === "undefined") return _basic;
-			_basic = val;
-			this.triggerChange("basic");
-		};
-		this.hra = function(val){
-			if (typeof val === "undefined") return _hra;
-			_hra = val;
-			this.triggerChange("hra");
-		};
-		this.da = function(val){
-			if (typeof val === "undefined") return _da;
-			_da = val;
-			this.triggerChange("da");
-		};
-		this.tax = function(val){
-			if (typeof val === "undefined") return _tax;
-			_tax = val;
-			this.triggerChange("tax");
-		};
-
-		this.salary = function(val){
-			if (typeof val === "undefined") return _salary;
-			_salary = val;
-			this.triggerChange("salary");
-		};
-		
-		/*this.hra =0;
-		this.da = 0;
-		this.tax = 0;
-		this.subscribers = {};
-
-		this.onSalaryChange = function(){};*/
-	}
-
-	SalaryCalculator.prototype.addChangeListener = function(attrName,callbackFn){
-		if (typeof this.subscribers[attrName] === "undefined") this.subscribers[attrName] = [];
-		this.subscribers[attrName].push(callbackFn);
-	}
-
-	SalaryCalculator.prototype.triggerChange = function(attrName){
-		var listeners = this.subscribers[attrName] || [];
-		for(var i=0; i<listeners.length;i++)
-			listeners[i]();
-	}
-
-	SalaryCalculator.prototype.calculate = function(){
-		var gross =  this.basic() + this.hra() + this.da();
-		this.salary(gross * ((100-this.tax())/100));
-		this.triggerChange("salary");
-	}
-
-
-	$(function(){
-		window.calc = new SalaryCalculator();
-
-		/*calc.onSalaryChange = function(){
-			$("#divResult").html(calc.salary);
-		}*/
-
-		calc.addChangeListener("salary",function(){
-			$("#divResult").html(calc.salary());
-		});
-
-		calc.addChangeListener("basic",function(){
-			$("#txtBasic").val(calc.basic());
-		});
-
-		calc.addChangeListener("hra",function(){
-			$("#txtHra").val(calc.hra());
-		});
-		calc.addChangeListener("da",function(){
-			$("#txtDa").val(calc.da());
-		});
-		calc.addChangeListener("tax",function(){
-			$("#rangeTax").val(calc.tax());
-			$("#spanTax").text(calc.tax());
-		});
-
-//--------------------------------------------------------------------------------
-		$("#txtBasic").change(function(){
-			calc.basic(parseInt($("#txtBasic").val()));
-		});
-		$("#txtHra").change(function(){
-			calc.hra(parseInt($("#txtHra").val()));
-		});
-		$("#txtDa").change(function(){
-			calc.da(parseInt($("#txtDa").val()));
-		
-		});
-		$("#rangeTax").change(function(){
-			calc.tax(parseInt($("#rangeTax").val()));
-		});
-
-
-		$("#btnCalculate").click(function(){
-			calc.calculate();
-			
-		});
-		
-	});
-
-	</script>
-</head>
-<body>
-	<h3>Salary Calculator</h3>
-	<hr>
+	<script src="SalaryCalculatorModel.js"></script>
+	<script type ="text/template" id="salaryCalculatorTemplate" >
 	<div id="content">
 		<div><label for="">Basic :</label><input type="text" name="" id="txtBasic"></div>
 		<div><label for="">HRA :</label><input type="text" name="" id="txtHra"></div>
@@ -144,5 +29,83 @@
 			<div id="divResult">0.0</div>
 		</div>
 	</div>
+	</script>
+	<script>
+
+	function SalaryCalculatorView(model){
+		this.template = $("#salaryCalculatorTemplate").html();
+		this.$root = $(this.template);
+
+		this.calc = model;
+		
+		var that = this;
+
+		this.calc.addChangeListener("salary",function(){
+			that.$root.find("#divResult").html(that.calc.salary());
+		});
+
+		this.calc.addChangeListener("basic",function(){
+			that.$root.find("#txtBasic").val(that.calc.basic());
+		});
+
+		this.calc.addChangeListener("hra",function(){
+			that.$root.find("#txtHra").val(that.calc.hra());
+		});
+		this.calc.addChangeListener("da",function(){
+			that.$root.find("#txtDa").val(that.calc.da());
+		});
+		this.calc.addChangeListener("tax",function(){
+			that.$root.find("#rangeTax").val(that.calc.tax());
+			that.$root.find("#spanTax").text(that.calc.tax());
+		});
+
+		//Subscribe to View element events
+
+		this.$root.find("#txtBasic").change(function(){
+			that.calc.basic(parseInt($("#txtBasic").val()));
+		});
+		this.$root.find("#txtHra").change(function(){
+			that.calc.hra(parseInt($("#txtHra").val()));
+		});
+		this.$root.find("#txtDa").change(function(){
+			that.calc.da(parseInt($("#txtDa").val()));
+		
+		});
+		this.$root.find("#rangeTax").change(function(){
+			that.calc.tax(parseInt($("#rangeTax").val()));
+		});
+
+
+		this.$root.find("#btnCalculate").click(function(){
+			that.calc.calculate();
+		});
+
+
+	}
+
+	$(function(){
+		
+		
+	});
+
+	</script>
+</head>
+<body>
+	<h3>Salary Calculator</h3>
+	<hr>
+	
 </body>
 </html>
+
+<!-- 
+console code
+
+var calculator = new SalaryCalculatorModel();
+
+var v1 = new SalaryCalculatorView(calculator);
+$(document.body).append(v1.$root);
+
+var v2 = new SalaryCalculatorView(calculator);
+$(document.body).append(v2.$root);
+
+ -->
