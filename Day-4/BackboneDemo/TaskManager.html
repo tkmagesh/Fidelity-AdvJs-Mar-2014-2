@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Task Manager</title>
+	<style>
+	.completed {
+		text-decoration: line-through;
+		font-style: italic;
+		color : red;
+	}
+	</style>
+	<script src="jquery.js"></script>
+	<script src="underscore.js"></script>
+	<script src="backbone.js"></script>
+
+	<script type="text/template" id="taskCollectionTemplate">
+	<span>Task :</span>
+		<input type="text" name="" id="txtTask">
+		<input type="button" value="Add Task" id="btnAddTask">
+		<input type="button" value="Remove Completed" id="btnRemoveCompleted">
+		<ul id="ulTaskList">
+			
+		</ul>
+		<div id="divMessage"></div>
+	</script>
+	<script>
+	var TaskModel = Backbone.Model.extend({
+		defaults : {
+			id : -1,
+			name : "",
+			isCompleted : false
+		},
+		toggleCompletion : function(){
+			this.set("isCompleted",!this.get("isCompleted"));
+		}
+	});
+
+	var TaskCollection = Backbone.Collection.extend({
+		model : TaskModel,
+		url : 'http://localhost:9090/dummy'
+	});
+
+	var TaskView = Backbone.View.extend({
+		tagName : "li",
+		events : {
+			"click" : "toggleCompletion"
+		},
+		toggleCompletion : function(){
+			this.model.toggleCompletion();
+		},
+		initialize : function(){
+			this.listenTo("change",this.model,this.render);
+		},
+		render : function(){
+			this.$el.html(this.model.get("name"));
+			if (this.model.get("isCompleted")){
+				this.$el.addClass("completed");
+			} else {
+				this.$el.removeClass("completed");
+			}
+			return this;
+		}
+	});
+
+	var TaskCollectionView = Backbone.View.extend({
+		
+		templateId : "#taskCollectionTemplate",
+
+		initialize : function(){
+			console.log(this.collection);
+			this.listenTo("add",this.collection,this.addTaskToView);
+		},
+		addTaskToView : function(nt){
+			var tv = new TaskView({model : nt});
+			this.$el.find("#ulTaskList").append(tv.render().$el);
+		},
+		events : {
+			"click #btnAddTask" : "addNewTask",
+			"click #btnRemoveCompleted" : "btnRemoveCompletedTasks"
+		},
+		addNewTask : function(){
+			var taskName= this.$el.find("#txtTask").val();
+			var newId = this.collection.length + 1;
+			this.collection.add(new TaskModel({id : newId, name : taskName}));
+		},
+		render : function(){
+			console.log(this.templateId);
+			this.$el.append($(this.templateId).html());
+			return this;
+		}
+
+	});
+
+	$(function(){
+		var tasks = new TaskCollection();
+		var tasksView = new TaskCollectionView({
+  			collection : tasks
+		});
+		tasksView.render();
+		$(document.body).append(tasksView.$el);
+	});
+	</script>
+</head>
+<body>
+	<h1>Task Manager</h1>
+	<hr>
+	<div id="content">
+		
+	</div>
+</body>
+</html>
