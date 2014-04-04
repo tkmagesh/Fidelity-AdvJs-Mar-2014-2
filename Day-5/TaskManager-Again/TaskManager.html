@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>TaskManager Demo</title>
+	<style>
+	.completed {
+		color : red;
+		text-decoration: line-through;
+		font-style: italic;
+	}
+	</style>
+	<script src="jquery.js"></script>
+	<script src="underscore.js"></script>
+	<script src="backbone.js"></script>
+	<script type="text/javascript">
+	var TaskModel = Backbone.Model.extend({
+		defaults : {
+			id : -1,
+			name : "",
+			isCompleted : false
+		},
+		toggleCompletion : function(){
+			this.set("isCompleted", !this.get("isCompleted"));
+		}
+	});
+
+	var TaskView = Backbone.View.extend({
+		//control events
+
+		events :{
+			"click" : "toggleCompletion"
+		},
+		toggleCompletion : function(){
+			console.log("task clicked");
+			this.model.toggleCompletion();
+		},
+
+		//model events
+		initialize : function(){
+			this.listenTo(this.model,"change",this.render);
+			this.listenTo(this.model,"remove",this.removeView);
+		},
+		removeView : function(){
+			this.$el.remove();
+		},
+		render : function(){
+			this.$el.html(this.model.get("name"));
+			if (this.model.get("isCompleted")){
+				this.$el.addClass("completed");
+			} else {
+				this.$el.removeClass("completed");
+			}
+			return this;
+		}
+	});
+	var TaskCollection = Backbone.Collection.extend({
+		model : TaskModel,
+		url : 'http://localhost:9090/dummy',
+		removeCompleted : function(){
+			console.log("Completed tasks are removed");
+		}
+	});
+
+	var TaskCollectionView = Backbone.View.extend({
+		//control events
+		events : {
+			"click #btnAddTask" : "addNewTask",
+			"click #btnRemoveCompleted" : "removeCompletedTasks"
+		},
+		addNewTask : function(){
+			console.log("add new task button is clicked");
+			var newId = this.collection.length + 1;
+			this.collection.add(new TaskModel({id : newId, name : this.$("#txtTask").val()}));
+		},
+		removeCompletedTasks : function(){
+			console.log("remove completed tasks button is clicked");	
+			this.collection.each(function(task){
+				if (task.get("isCompleted")) task.destroy();
+			});
+		},
+
+		//model or collection events
+		initialize : function(){
+			this.listenTo(this.collection,"add",this.render);
+			this.listenTo(this.collection,"remove",this.render);
+		},
+		render : function(){
+			console.log("render called");
+			this.$("#ulTaskList").html('');
+			this.collection.each(function(task){
+				var taskView = new TaskView({
+					model : task,
+					tagName : 'li'
+				});
+				taskView.render().$el.appendTo(this.$("#ulTaskList"))
+			});
+		}
+
+	})
+	$(function(){
+		window.tasks = new TaskCollection();
+		window.taskColView = new TaskCollectionView({
+		  collection : tasks,
+		  el : document.body
+		});
+	})
+	</script>
+</head>
+<body>
+	<h1>Task Manager</h1>
+	<hr>
+	<div id="content">
+		<span>Task :</span>
+		<input type="text" name="" id="txtTask">
+		<input type="button" value="Add Task" id="btnAddTask">
+		<input type="button" value="Remove Completed" id="btnRemoveCompleted">
+		<ul id="ulTaskList"></ul>
+	</div>
+</body>
+</html>
