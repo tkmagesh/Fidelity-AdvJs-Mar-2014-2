@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Greet Demo</title>
+	<script src="jquery.js"></script>
+	<script src="underscore.js"></script>
+	<script src="backbone.js"></script>
+	<script type="text/template" id="greetTemplate">
+	<span>First Name:</span>
+	<input type="text" name="" id="txtFirstName">
+	<br>
+	<span>Last Name:</span>
+	<input type="text" name="" id="txtLastName">
+	<br>
+	<input type="button" value="Greet" id="btnGreet">
+	<div id="divMessage"></div>
+	</script>
+	<script>
+	var GreetModel = Backbone.Model.extend({
+		defaults : {
+			firstName : "",
+			lastName : "",
+			greetMsg : ""
+		},
+		greet : function(){
+			console.log("greet method invoked");
+			this.set("greetMsg","Hi " + this.get("firstName") + " " + this.get("lastName"));
+		}
+	});
+
+	var GreetView = Backbone.View.extend({
+		//templateId : "#greetTemplate",
+
+		//Binding to control events
+		events : {
+			"click #btnGreet" : "greet",
+			"change :text" : "updateModel"
+		},
+		greet : function(){
+			this.model.greet();
+		},
+		updateModel : function(){
+			console.log("updating model");
+
+			this.model.set("firstName",this.$el.find("#txtFirstName").val());
+			this.model.set("lastName",this.$el.find("#txtLastName").val());
+		},
+
+		//Binding to model events
+		initialize : function(){
+			this.listenTo(this.model,"change",this.displayGreetMsg);
+		},
+		displayGreetMsg : function(){
+			this.$el.find("#divMessage").html(this.model.get("greetMsg"));
+		},
+
+		//generate the html
+		render : function(){
+			console.log(this.templateId);
+			this.$el.append($(this.templateId).html());
+			return this;
+		}
+	});
+	</script>
+	
+	<script>
+	$(function(){
+		var greetModel = new GreetModel();
+		var greetView = new GreetView({
+			el : document.body,
+			model : greetModel
+		});
+	});
+	</script>
+</head>
+<body>
+	<span>First Name:</span>
+	<input type="text" name="" id="txtFirstName">
+	<br>
+	<span>Last Name:</span>
+	<input type="text" name="" id="txtLastName">
+	<br>
+	<input type="button" value="Greet" id="btnGreet">
+	<div id="divMessage"></div>
+</body>
+</html>

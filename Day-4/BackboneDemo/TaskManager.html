@@ -50,7 +50,7 @@
 			this.model.toggleCompletion();
 		},
 		initialize : function(){
-			this.listenTo("change",this.model,this.render);
+			this.listenTo(this.model,"change", this.render);
 		},
 		render : function(){
 			this.$el.html(this.model.get("name"));
@@ -69,7 +69,7 @@
 
 		initialize : function(){
 			console.log(this.collection);
-			this.listenTo("add",this.collection,this.addTaskToView);
+			this.listenTo(this.collection,"add", this.addTaskToView);
 		},
 		addTaskToView : function(nt){
 			var tv = new TaskView({model : nt});
